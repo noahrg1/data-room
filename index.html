@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  //
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Programmatica — Data Room</title>
@@ -658,17 +657,17 @@
       </div>
     </div>
     <nav class="shell-nav">
-      <button class="shell-tab active" onclick="showPanel(3, this)">
-        <span class="tab-num">01</span> Data Ownership
+      <button class="shell-tab active" onclick="showPanel(4, this)">
+        <span class="tab-num">01</span> Media Consumption
+      </button>
+      <button class="shell-tab" onclick="showPanel(3, this)">
+        <span class="tab-num">02</span> Data Ownership
       </button>
       <button class="shell-tab" onclick="showPanel(1, this)">
-        <span class="tab-num">02</span> Platform Data Scale
+        <span class="tab-num">03</span> Platform Data Scale
       </button>
       <button class="shell-tab" onclick="showPanel(2, this)">
-        <span class="tab-num">03</span> DSP Landscape
-      </button>
-      <button class="shell-tab" onclick="showPanel(4, this)">
-        <span class="tab-num">04</span> Media Consumption
+        <span class="tab-num">04</span> DSP Landscape
       </button>
     </nav>
   </div>
@@ -696,7 +695,7 @@
   </div>
 
   <!-- PANEL 3 — Data Ownership (vanilla JS) -->
-  <div id="panel-3" class="page-panel active" style="min-height:calc(100vh - 100px);display:flex;flex-direction:column;">
+  <div id="panel-3" class="page-panel" style="min-height:calc(100vh - 100px);">
     <div class="inner-header">
       <div class="eyebrow">Programmatica — Data Intelligence</div>
       <div class="page-title">Who Owns the Data</div>
@@ -714,7 +713,7 @@
   </div>
 
   <!-- PANEL 4 — Media Consumption (Chart.js, restyled) -->
-  <div id="panel-4" class="page-panel">
+  <div id="panel-4" class="page-panel active">
     <div class="inner-header">
       <div class="eyebrow">Programmatica — Market Intelligence</div>
       <div class="page-title">Media Consumption 2025</div>
@@ -1009,11 +1008,14 @@
         // On mobile: stack vertically, size Google circle to ~40% of screen width
         googleR = Math.min(stageW * 0.4, 140);
       } else {
-        const maxRFromH = stageH * 0.46;
+        const maxRFromH = stageH * 0.40;
+        const rightPanelW = 210;
+        const contextNoteW = 180;
+        const availW = stageW - rightPanelW - contextNoteW;
         googleR = maxRFromH;
         const gapPx = 44;
-        const totalW = 2*googleR + 2*(googleR*Math.sqrt(REST_VAL/GOOGLE_VAL)) + 2*(googleR*Math.sqrt(BROKER_VAL/GOOGLE_VAL)) + gapPx*2 + 220 + 40;
-        if (totalW > stageW) googleR *= stageW / totalW;
+        const circlesW = 2*googleR + 2*(googleR*Math.sqrt(REST_VAL/GOOGLE_VAL)) + 2*(googleR*Math.sqrt(BROKER_VAL/GOOGLE_VAL)) + gapPx*2;
+        if (circlesW > availW) googleR *= availW / circlesW;
       }
       const fGR = googleR;
       const fRR = fGR * Math.sqrt(REST_VAL / GOOGLE_VAL);
@@ -1222,15 +1224,13 @@
       clearTimeout(mcResizeTimer);
       mcResizeTimer = setTimeout(function() {
         if (document.getElementById('panel-4').classList.contains('active')) mcRender();
+        if (document.getElementById('panel-3').classList.contains('active') && p3Initialised) initP3();
       }, 200);
     });
 
-    // Init P3 on load (it's the default panel)
+    // Init chart on load (Media Consumption is the default panel)
     window.addEventListener('DOMContentLoaded', function() {
-      initP3();
-      p3Initialised = true;
-      // Pre-render chart in background
-      setTimeout(mcRender, 200);
+      mcRender();
     });
   </script>
 
